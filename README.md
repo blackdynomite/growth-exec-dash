@@ -1,6 +1,6 @@
 # Copilot Executive Dashboard Rebuild
 
-This folder contains a clean-room static rebuild of the executive dashboard pattern you referenced.
+This folder contains a clean-room static rebuild of the executive dashboard
 
 ## What it is
 
@@ -30,7 +30,7 @@ Then open `http://localhost:8000`.
 4. In GitHub, open `Settings` -> `Pages`.
 5. Set the source to `Deploy from a branch`.
 6. Choose `main` and `/ (root)`.
-7. Your site will publish at `https://blackdynomite.github.io/growth-exec-dashboard/`.
+7. Your site will publish at `https://blackdynomite.github.io/growth-exec-dash/`.
 
 ## Next upgrades
 
