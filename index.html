@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Copilot Executive Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="header-icon">i</div>
+    <h1>GitHub Copilot Executive Dashboard</h1>
+    <div class="toggle-wrap" id="sku-filters">
+      <button class="toggle-btn active" data-sku="all">All SKUs</button>
+      <button class="toggle-btn active" data-sku="Free"><span class="dot dot-gray"></span>Free</button>
+      <button class="toggle-btn active" data-sku="Edu"><span class="dot dot-pink"></span>Edu</button>
+      <button class="toggle-btn active" data-sku="Pro"><span class="dot dot-blue"></span>Pro</button>
+      <button class="toggle-btn active" data-sku="Pro+"><span class="dot dot-purple"></span>Pro+</button>
+      <button class="toggle-btn active" data-sku="Business"><span class="dot dot-teal"></span>Biz</button>
+      <button class="toggle-btn active" data-sku="Enterprise"><span class="dot dot-orange"></span>Ent</button>
+    </div>
+    <div class="toggle-wrap" id="granularity-toggle">
+      <button class="toggle-btn active" data-gran="monthly">Monthly</button>
+      <button class="toggle-btn" data-gran="weekly">Weekly</button>
+    </div>
+    <div class="toggle-wrap" id="range-toggle">
+      <button class="toggle-btn" data-range="3">3M</button>
+      <button class="toggle-btn" data-range="6">6M</button>
+      <button class="toggle-btn active" data-range="12">12M</button>
+    </div>
+    <span class="updated">Last Updated: April 8, 2026</span>
+  </header>
+
+  <nav class="sidebar">
+    <a class="nav-item active" href="#exec" data-section="exec"><span class="nav-icon">📊</span><span class="nav-label">Executive Summary</span></a>
+    <a class="nav-item" href="#growth" data-section="growth"><span class="nav-icon">🚀</span><span class="nav-label">User Growth &amp; Acquisition</span></a>
+    <a class="nav-item" href="#finance" data-section="finance"><span class="nav-icon">💰</span><span class="nav-label">Finance</span></a>
+    <a class="nav-item" href="#utilization" data-section="utilization"><span class="nav-icon">⚡</span><span class="nav-label">Utilization &amp; Engagement</span></a>
+    <a class="nav-item" href="#retention" data-section="retention"><span class="nav-icon">🔁</span><span class="nav-label">Retention &amp; Health</span></a>
+    <a class="nav-item" href="#goals" data-section="goals"><span class="nav-icon">🎯</span><span class="nav-label">Goals &amp; Targets</span></a>
+    <a class="nav-item" href="#experiments" data-section="experiments"><span class="nav-icon">🧪</span><span class="nav-label">Experiments</span></a>
+    <a class="nav-item" href="#ideas" data-section="ideas"><span class="nav-icon">💡</span><span class="nav-label">Growth Ideas</span></a>
+  </nav>
+
+  <main class="main">
+    <section class="section" id="exec">
+      <div class="section-header"><h2>Executive Summary</h2><p>Key performance indicators at a glance</p></div>
+      <div class="grid grid-4" id="kpi-tiles"></div>
+    </section>
+
+    <section class="section" id="growth">
+      <div class="section-header"><h2>User Growth &amp; Acquisition</h2><p>MAU trends, activations, channel mix, and plan migration</p></div>
+      <div class="grid grid-4">
+        <div class="card"><div class="card-title">Monthly Active Users by SKU <span class="info-icon" title="Illustrative starter chart for MAU mix by plan.">i</span><span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-mau-sku"></canvas></div></div>
+        <div class="card"><div class="card-title">MAU Growth by Month <span class="info-icon" title="Illustrative decomposition of new, returning, and churned users.">i</span><span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-mau-growth"></canvas></div></div>
+        <div class="card"><div class="card-title">Activations by Channel <span class="info-icon" title="Illustrative acquisition channel mix.">i</span><span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-act-channel"></canvas></div></div>
+        <div class="card"><div class="card-title">Activations by SKU <span class="info-icon" title="Illustrative plan landing distribution.">i</span><span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-act-sku"></canvas></div></div>
+        <div class="card"><div class="card-title">Plan Upgrade / Downgrade Volume <span class="info-icon" title="Illustrative movement between plan tiers.">i</span><span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-plan-migration"></canvas></div></div>
+        <div class="card"><div class="card-title">Upgrade &amp; Downgrade Rates Over Time <span class="info-icon" title="Illustrative conversion and downgrade rates by period.">i</span><span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-upgrade-rates"></canvas></div></div>
+        <div class="card"><div class="card-title">Funnel Visualization <span class="illustrative">(Illustrative Data)</span></div><div id="funnel-bars-wrap" class="funnel-bars-wrap"></div></div>
+        <div class="card"><div class="card-title">Conversion Funnel: Visit → Activation <span class="info-icon" title="Illustrative conversion by step across the acquisition path.">i</span><span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-funnel-rates"></canvas></div></div>
+      </div>
+    </section>
+
+    <section class="section" id="finance">
+      <div class="section-header"><h2>Finance</h2><p>Revenue, cost, margins, and unit economics</p></div>
+      <div class="grid grid-4">
+        <div class="card"><div class="card-title">Subscription vs Overage <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-overage"></canvas></div></div>
+        <div class="card"><div class="card-title">Revenue, COGS &amp; Gross Margin <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-rev-cogs-gm"></canvas></div></div>
+        <div class="card"><div class="card-title">Gross Profit by SKU <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-gp-sku"></canvas></div></div>
+        <div class="card"><div class="card-title">Gross Profit by Usage Percentile <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-gp-percentile"></canvas></div></div>
+      </div>
+      <div class="grid grid-4 row-gap">
+        <div class="card"><div class="card-title">ARPU by SKU <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-arpu-cost"></canvas></div></div>
+        <div class="card"><div class="card-title">COGS per User by SKU <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-cogspu"></canvas></div></div>
+        <div class="card"><div class="card-title">Gross Profit per User by SKU <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-gppu"></canvas></div></div>
+        <div class="card-placeholder"><div class="card-title">Placeholder 5</div></div>
+      </div>
+    </section>
+
+    <section class="section" id="utilization">
+      <div class="section-header"><h2>Utilization &amp; Engagement</h2><p>Stickiness, engagement depth, usage patterns, and surface adoption</p></div>
+      <div class="grid grid-4">
+        <div class="card"><div class="card-title">WAU / MAU Stickiness <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-wau-mau"></canvas></div></div>
+        <div class="card"><div class="card-title">DAU / WAU Stickiness <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-dau-wau"></canvas></div></div>
+        <div class="card"><div class="card-title">Usage Frequency Distribution <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-freq-dist"></canvas></div></div>
+        <div class="card"><div class="card-title">Interactions per User per Day <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-interactions"></canvas></div></div>
+        <div class="card"><div class="card-title">MAU by Product Surface <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-mau-surface"></canvas></div></div>
+        <div class="card"><div class="card-title">Multi-Surface Users <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-multi-surface"></canvas></div></div>
+        <div class="card"><div class="card-title">Usage Share by Product Surface <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-chat-comp"></canvas></div></div>
+        <div class="card"><div class="card-title">M12 Retention by # of Surfaces <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-ret-surface"></canvas></div></div>
+      </div>
+    </section>
+
+    <section class="section" id="retention">
+      <div class="section-header"><h2>Retention &amp; Health</h2><p>Cohort retention and return rates</p></div>
+      <div class="grid grid-4">
+        <div class="card"><div class="card-title">Return Rate &amp; User Base <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-return-rate"></canvas></div></div>
+        <div class="card"><div class="card-title">User Retention J-Curves by Cohort <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-jcurves"></canvas></div></div>
+        <div class="card"><div class="card-title">Revenue Retention J-Curves by Cohort <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-rev-jcurves"></canvas></div></div>
+        <div class="card"><div class="card-title">Retention Milestones Over Time <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-ret-milestones"></canvas></div></div>
+      </div>
+      <div class="grid grid-4 row-gap">
+        <div class="card"><div class="card-title">Cohorted Revenue Over Time <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-cohort-rev"></canvas></div></div>
+        <div class="card"><div class="card-title">Cohorted Revenue per User <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-cohort-rev-user"></canvas></div></div>
+        <div class="card"><div class="card-title">Cohorted COGS Over Time <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-cohort-gp"></canvas></div></div>
+        <div class="card"><div class="card-title">Cohorted COGS per User <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-cohort-gp-user"></canvas></div></div>
+      </div>
+    </section>
+
+    <section class="section" id="goals">
+      <div class="section-header"><h2>Goals &amp; Targets</h2><p>Weekly actuals vs. targets by product area</p></div>
+      <h3 class="goal-group-title ghcp">GitHub Copilot (Total)</h3>
+      <div class="grid grid-4 goal-grid">
+        <div class="card"><div class="card-title">Rolling 7-Day DAU <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-ghcp-dau"></canvas></div></div>
+        <div class="card"><div class="card-title">New Users per Week <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-ghcp-newusers"></canvas></div></div>
+        <div class="card"><div class="card-title">Week 1 Retention <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-ghcp-retention"></canvas></div></div>
+        <div class="card"><div class="card-title">Gross Margin <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-ghcp-margin"></canvas></div></div>
+      </div>
+      <h3 class="goal-group-title vscode">VS Code</h3>
+      <div class="grid grid-4 goal-grid">
+        <div class="card"><div class="card-title">Rolling 7-Day DAU <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-vsc-dau"></canvas></div></div>
+        <div class="card"><div class="card-title">New Users per Week <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-vsc-newusers"></canvas></div></div>
+        <div class="card"><div class="card-title">Week 1 Retention <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-vsc-retention"></canvas></div></div>
+        <div class="card"><div class="card-title">Cost per User <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-vsc-cost"></canvas></div></div>
+      </div>
+      <h3 class="goal-group-title cli">CLI</h3>
+      <div class="grid grid-4 goal-grid">
+        <div class="card"><div class="card-title">Rolling 7-Day DAU <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-cli-dau"></canvas></div></div>
+        <div class="card"><div class="card-title">New Users per Week <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-cli-newusers"></canvas></div></div>
+        <div class="card"><div class="card-title">Week 1 Retention <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-cli-retention"></canvas></div></div>
+        <div class="card"><div class="card-title">Cost per User <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-cli-cost"></canvas></div></div>
+      </div>
+      <h3 class="goal-group-title cca">CCA (Copilot Chat / Agent)</h3>
+      <div class="grid grid-4 goal-grid">
+        <div class="card"><div class="card-title">Rolling 7-Day DAU <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-cca-dau"></canvas></div></div>
+        <div class="card"><div class="card-title">Merging Users as % of DAU <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-cca-merging"></canvas></div></div>
+        <div class="card"><div class="card-title">Week 1 Retention <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-cca-retention"></canvas></div></div>
+        <div class="card"><div class="card-title">Cost per User <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-cca-cost"></canvas></div></div>
+      </div>
+      <h3 class="goal-group-title ccr">CCR (Copilot Code Review)</h3>
+      <div class="grid grid-4 goal-grid">
+        <div class="card"><div class="card-title">WAU <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-ccr-wau"></canvas></div></div>
+        <div class="card"><div class="card-title">PRs with CCR Review <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-ccr-prs"></canvas></div></div>
+        <div class="card"><div class="card-title">Positive Feedback Rate <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-ccr-feedback"></canvas></div></div>
+        <div class="card"><div class="card-title">Cost per User <span class="illustrative">(Illustrative)</span></div><div class="chart-wrap chart-small"><canvas id="goal-ccr-cost"></canvas></div></div>
+      </div>
+    </section>
+
+    <section class="section" id="experiments">
+      <div class="section-header"><h2>Experiments</h2><p>Active and recently completed experiments</p></div>
+      <div class="card span-full">
+        <div class="card-title">Active Experiments <span class="illustrative">(Illustrative Data)</span></div>
+        <table class="exp-table">
+          <thead><tr><th>Experiment Name</th><th>Status</th><th>Primary Metric</th><th>Lift</th><th>NPV Est.</th></tr></thead>
+          <tbody id="experiment-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="ideas">
+      <div class="section-header"><h2>Growth Ideas</h2><p>Additional views under consideration — feedback welcome</p></div>
+      <div class="grid grid-4">
+        <div class="card"><div class="card-title">Seat Utilization (Active / Assigned) <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-seat-util"></canvas></div></div>
+        <div class="card"><div class="card-title">ARR Bridge (New + Expansion − Contraction − Churn) <span class="illustrative">(Illustrative Data)</span></div><div class="chart-wrap"><canvas id="ch-expansion"></canvas></div></div>
+        <div class="card-placeholder"><div class="card-title">Placeholder 1</div></div>
+        <div class="card-placeholder"><div class="card-title">Placeholder 2</div></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
