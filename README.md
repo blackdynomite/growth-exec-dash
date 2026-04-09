@@ -30,7 +30,7 @@ Then open `http://localhost:8000`.
 4. In GitHub, open `Settings` -> `Pages`.
 5. Set the source to `Deploy from a branch`.
 6. Choose `main` and `/ (root)`.
-7. Your site will publish at `https://<your-username>.github.io/<repo-name>/`.
+7. Your site will publish at `https://blackdynomite.github.io/growth-exec-dashboard/`.
 
 ## Next upgrades
 
